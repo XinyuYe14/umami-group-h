@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cheat sheet | Umami – Group H</title>
+<meta name="description" content="A one-page Umami cheat sheet: commands, tracker attributes, events API and metrics.">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="index.html"><span class="dot"></span>Umami <small>&middot; Group H</small></a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="notes.html">Notes</a>
+    <a href="cheatsheet.html">Cheat sheet</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="references.html">References</a>
+  </nav>
+</div></header>
+<main class="wrap">
+  <p class="eyebrow">Cheat sheet</p>
+  <h1 class="page-title">Umami on one page</h1>
+  <p class="lead">Everything you need while working with Umami 3. <a class="print-btn no-print" href="cheatsheet.pdf" download>Download PDF</a></p>
+
+  <div class="sheet">
+    <div class="card">
+      <h3>Run it with Docker</h3>
+<div class="code"><pre>docker compose up -d     # start
+docker compose ps        # wait: healthy
+docker compose logs -f umami
+docker compose down      # stop, keep data
+docker compose down -v   # delete data</pre></div>
+      <p>Dashboard: <code>http://localhost:3000</code><br>First login: <code>admin</code> / <code>umami</code> &mdash; change it at once.</p>
+    </div>
+
+    <div class="card">
+      <h3>Add tracking to a page</h3>
+<div class="code"><pre>&lt;script defer
+  src="https://cloud.umami.is/script.js"
+  data-website-id="YOUR-WEBSITE-ID"&gt;&lt;/script&gt;</pre></div>
+      <p>Put it in <code>&lt;head&gt;</code> on every page. Find it under Websites &rarr; edit (pencil) icon. Route changes in single-page apps are tracked automatically.</p>
+    </div>
+
+    <div class="card">
+      <h3>Track a click (HTML)</h3>
+<div class="code"><pre>&lt;button
+  data-umami-event="Book stall"
+  data-umami-event-stall="crafts"&gt;
+  Book this stall
+&lt;/button&gt;</pre></div>
+      <p>Event name: max 50 characters. <code>data-umami-event-<i>name</i></code> adds a property. Attribute values are stored as text.</p>
+    </div>
+
+    <div class="card">
+      <h3>Track from JavaScript</h3>
+<div class="code"><pre>umami.track('Reserve tickets');
+umami.track('Reserve tickets', { quantity: 2 });
+// links sessions, so no longer anonymous:
+umami.identify('user-123');</pre></div>
+      <p>Guard with <code>if (window.umami)</code> in case the tracker is blocked.</p>
+    </div>
+
+    <div class="card">
+      <h3>Tracker options (script attributes)</h3>
+      <div class="table-wrap"><table>
+        <tr><td><code>data-do-not-track="true"</code></td><td>Respect browser Do Not Track</td></tr>
+        <tr><td><code>data-domains="a.com,b.com"</code></td><td>Only track on these hosts</td></tr>
+        <tr><td><code>data-auto-track="false"</code></td><td>Turn off automatic page views and events</td></tr>
+        <tr><td><code>data-exclude-search="true"</code></td><td>Drop query strings from URLs</td></tr>
+        <tr><td><code>data-host-url="..."</code></td><td>Send data to a different host</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>Server settings (environment)</h3>
+      <div class="table-wrap"><table>
+        <tr><td><code>DATABASE_URL</code></td><td>PostgreSQL connection (required)</td></tr>
+        <tr><td><code>APP_SECRET</code></td><td>Random string securing logins</td></tr>
+        <tr><td><code>TRACKER_SCRIPT_NAME</code></td><td>Rename <code>script.js</code></td></tr>
+        <tr><td><code>COLLECT_API_ENDPOINT</code></td><td>Rename <code>/api/send</code></td></tr>
+        <tr><td><code>IGNORE_IP</code></td><td>IPs to ignore, e.g. your office</td></tr>
+        <tr><td><code>SALT_ROTATION</code></td><td>How often the session salt changes (default: month)</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>How a visitor is identified</h3>
+<div class="code"><pre>Session ID = hash(website ID + IP
+                  + user agent + monthly salt)
+Visit ID   = hash(session ID + hourly salt)</pre></div>
+      <p>No cookie. IP used in the hash, not stored. New salt each month &rarr; no link across months.</p>
+    </div>
+
+    <div class="card">
+      <h3>What the metrics mean</h3>
+      <div class="table-wrap"><table>
+        <tr><td><b>Visitors</b></td><td>Unique sessions (an estimate of people)</td></tr>
+        <tr><td><b>Visits</b></td><td>New visit after 30 min inactive</td></tr>
+        <tr><td><b>Bounce rate</b></td><td>Visits with 1 event &divide; visits</td></tr>
+        <tr><td><b>Visit duration</b></td><td>First to last event; multi-page visits only</td></tr>
+        <tr><td><b>Events</b></td><td>Actions, not people or purchases</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>Quick facts</h3>
+      <div class="table-wrap"><table>
+        <tr><td>Licence</td><td>MIT, open source</td></tr>
+        <tr><td>Stack</td><td>Next.js, Prisma, PostgreSQL (v3: PostgreSQL only)</td></tr>
+        <tr><td>Requirements</td><td>Node.js 18.18+, PostgreSQL 12.14+</td></tr>
+        <tr><td>Hosting</td><td>Umami Cloud or self-hosted</td></tr>
+        <tr><td>Bot filter</td><td>isbot library, on by default</td></tr>
+        <tr><td>GDPR</td><td>Hashed IDs are still personal data (EDPB, 2025)</td></tr>
+      </table></div>
+    </div>
+
+    <div class="card">
+      <h3>Not seeing data?</h3>
+      <ol>
+        <li>Website ID matches the dashboard?</li>
+        <li>DevTools &rarr; Network shows <code>/api/send</code>?</li>
+        <li>Ad blocker off for this site?</li>
+        <li>Date range includes today?</li>
+        <li>Hard refresh (<kbd>Ctrl</kbd>+<kbd>F5</kbd>) after editing HTML.</li>
+      </ol>
+    </div>
+  </div>
+  <p class="no-print" style="margin-top:24px">Sources: Umami Software (n.d.a; n.d.b; n.d.d; n.d.f; n.d.g; n.d.i); EDPB (2025). Full details on the <a href="references.html">References</a> page.</p>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>COMP10020 Internet Technologies &middot; CW1 &middot; Group H &middot; University of the West of Scotland, 2026&ndash;27</span>
+  <span>Xinyu Ye &middot; Haoyue Zhou &middot; Chengwei Gao &middot; Junliang Li</span>
+</div></footer>
+</body>
+</html>

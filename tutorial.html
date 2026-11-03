@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tutorial | Umami – Group H</title>
+<meta name="description" content="Step-by-step tutorial: track a website with Umami Cloud – page views, button clicks and campaign links.">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="index.html"><span class="dot"></span>Umami <small>&middot; Group H</small></a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="notes.html">Notes</a>
+    <a href="cheatsheet.html">Cheat sheet</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="references.html">References</a>
+  </nav>
+</div></header>
+<main class="wrap">
+  <p class="eyebrow">Tutorial</p>
+  <h1 class="page-title">Track your website with Umami Cloud</h1>
+  <p class="lead">Learn how to use Umami step by step: create an account, add a website, connect it, and read page views, button clicks and campaign links in your dashboard. We use our Paisley Christmas Market page as the example, but you can follow along with any website of your own.</p>
+  <div class="meta">
+    <span class="pill">About 30 minutes</span>
+    <span class="pill">Level: beginner</span>
+    <span class="pill">Needs: a web browser, VS Code</span>
+    <span class="pill">Umami Cloud</span>
+  </div>
+
+  <div class="with-toc">
+    <nav class="toc" aria-label="Steps">
+      <strong>Steps</strong>
+      <a href="#before">Before you start</a>
+      <a href="#s1">1. Create an account</a>
+      <a href="#s2">2. Add your website</a>
+      <a href="#s3">3. Copy the tracking code</a>
+      <a href="#s4">4. Get a website to track</a>
+      <a href="#s5">5. Connect the website</a>
+      <a href="#s6">6. Open it on localhost</a>
+      <a href="#s7">7. Check page views</a>
+      <a href="#s8">8. Track button clicks</a>
+      <a href="#s9">9. Track a campaign link</a>
+      <a href="#trouble">Troubleshooting</a>
+    </nav>
+
+    <div>
+      <section id="before">
+        <h2>Before you start</h2>
+        <p><b>What you will do:</b> connect a website to Umami Cloud and answer three questions from the dashboard: how many people visited, which button was clicked most, and which link brought visitors in.</p>
+        <ul>
+          <li>A web browser (Chrome, Edge, Safari or Firefox).</li>
+          <li><b>VS Code</b> with the <b>Live Server</b> extension installed (search for "Live Server" in the Extensions panel).</li>
+          <li>An email address to sign up for Umami Cloud (the free plan is enough).</li>
+        </ul>
+      </section>
+
+      <section class="step" id="s1">
+        <h2><span class="n">1</span>Create an Umami Cloud account</h2>
+        <p>Go to <a href="https://umami.is">umami.is</a> and click <b>Sign up</b>. Register with your email address and log in (Umami Software, n.d.h).</p>
+        <figure><img src="images/tutorial/01-umami-home.png" alt="The umami.is home page with the Sign up button highlighted" loading="lazy"><figcaption>The Umami home page. Click <b>Sign up</b> to create a free account.</figcaption></figure>
+      </section>
+
+      <section class="step" id="s2">
+        <h2><span class="n">2</span>Add your website</h2>
+        <p>After logging in, click <b>Websites</b> in the left menu, then click <b>+ Add website</b>.</p>
+        <figure><img src="images/tutorial/02-websites.png" alt="The Websites page in Umami Cloud with the Add website button" loading="lazy"><figcaption>The Websites page lists every site you track.</figcaption></figure>
+        <p>Fill in the form:</p>
+        <ul>
+          <li><b>Name:</b> any name you will recognise, for example <code>Paisley Christmas Market</code>.</li>
+          <li><b>Domain:</b> where the site runs. We test on our own computer, so type <code>localhost</code>. For a site on GitHub Pages it would be <code>yourname.github.io</code>.</li>
+        </ul>
+        <figure><img src="images/tutorial/03-add-website-form.png" alt="The Add website form with Name and Domain fields" loading="lazy"><figcaption>Type only the host name in <b>Domain</b>: no <code>http://</code>, no port number and no file path.</figcaption></figure>
+        <p>Click <b>Save</b>.</p>
+      </section>
+
+      <section class="step" id="s3">
+        <h2><span class="n">3</span>Copy the tracking code</h2>
+        <p>After saving, Umami shows the <b>Tracking code</b> for your website. It is one <code>&lt;script&gt;</code> tag with two important parts:</p>
+        <ul>
+          <li><code>src</code>: the address of the Umami tracker script.</li>
+          <li><code>data-website-id</code>: the ID that links your pages to this dashboard.</li>
+        </ul>
+        <figure><img src="images/tutorial/04-tracking-code.png" alt="The Tracking code dialog showing the script tag" loading="lazy"><figcaption>Click the copy icon and keep the code somewhere safe. Use your own website ID, not the one in our screenshot.</figcaption></figure>
+        <p>If you close this window, you can find the code again: on the Websites page, click the <b>edit</b> (pencil) icon next to your site. Clicking the website name opens its dashboard.</p>
+        <figure><img src="images/tutorial/05-website-list.png" alt="The Websites list showing Paisley Christmas Market with localhost as its domain" loading="lazy"><figcaption>Your new website in the list.</figcaption></figure>
+      </section>
+
+      <section class="step" id="s4">
+        <h2><span class="n">4</span>Get a website to track</h2>
+        <p>You can use <b>any website of your own</b>. If you do not have one, download ours:</p>
+        <p><a class="print-btn" href="downloads/paisley-demo.zip" download>Download our demo website (.zip)</a></p>
+        <p>Unzip it and open the folder in VS Code. It contains <code>index.html</code>, <code>styles.css</code>, <code>app.js</code> and <code>umami-config.js</code>. Analytics is switched off until you add your own details in the next step.</p>
+      </section>
+
+      <section class="step" id="s5">
+        <h2><span class="n">5</span>Connect the website to Umami</h2>
+        <p><b>Using our demo website:</b> open <code>umami-config.js</code> and paste the two values from your tracking code, then save (<kbd>Ctrl</kbd>+<kbd>S</kbd> or <kbd>Cmd</kbd>+<kbd>S</kbd>):</p>
+        <div class="code"><div class="file">umami-config.js</div><pre>window.PAISLEY_UMAMI = {
+  scriptUrl: 'https://cloud.umami.is/script.js',
+  websiteId: 'YOUR-WEBSITE-ID'
+};</pre></div>
+        <figure><img src="images/tutorial/06-config.png" alt="umami-config.js in VS Code with scriptUrl and websiteId filled in" loading="lazy"><figcaption>Paste the <code>src</code> URL into <code>scriptUrl</code> and the ID inside the quotes after <code>data-website-id</code> into <code>websiteId</code>.</figcaption></figure>
+        <p><b>Using your own website:</b> paste the whole tracking code inside the <code>&lt;head&gt;</code> of every page (Umami Software, n.d.a):</p>
+        <div class="code"><div class="file">your-page.html</div><pre>&lt;head&gt;
+  ...
+  &lt;script defer src="https://cloud.umami.is/script.js" data-website-id="YOUR-WEBSITE-ID"&gt;&lt;/script&gt;
+&lt;/head&gt;</pre></div>
+      </section>
+
+      <section class="step" id="s6">
+        <h2><span class="n">6</span>Open the website on localhost</h2>
+        <p>The tracker needs the page to be served over <code>http://</code>. Double-clicking the file opens it as <code>file://</code>, and nothing is recorded. In VS Code, right-click <code>index.html</code> and choose <b>Open with Live Server</b>.</p>
+        <figure><img src="images/tutorial/06-live-server.png" alt="VS Code right-click menu with Open with Live Server" loading="lazy"><figcaption>Right-click <code>index.html</code> &rarr; <b>Open with Live Server</b>.</figcaption></figure>
+        <p>Live Server may open <code>127.0.0.1:5500</code>. This is the same computer as <code>localhost</code>; you can change the address bar to <code>localhost:5500</code> so it matches the domain you entered.</p>
+        <figure><img src="images/tutorial/06-site-running.png" alt="The Paisley Christmas Market site open at localhost:5500" loading="lazy"><figcaption>The website running on localhost. The two <b>Book this stall</b> buttons will be used in step 8.</figcaption></figure>
+      </section>
+
+      <section class="step" id="s7">
+        <h2><span class="n">7</span>Check page views</h2>
+        <p>Click around the website for a moment. Then, in Umami, go to <b>Websites</b> and click your website's name to open the <b>Overview</b>.</p>
+        <figure><img src="images/tutorial/07-overview.png" alt="Umami Overview showing visitors, visits, views, bounce rate and visit duration" loading="lazy"><figcaption>The Overview after our test visit.</figcaption></figure>
+        <div class="table-wrap"><table>
+          <tr><th>Metric</th><th>Meaning</th></tr>
+          <tr><td><b>Visitors</b></td><td>Unique visitors, estimated with a monthly hash instead of a cookie</td></tr>
+          <tr><td><b>Visits</b></td><td>A new visit starts after 30 minutes without activity</td></tr>
+          <tr><td><b>Views</b></td><td>Pages loaded</td></tr>
+          <tr><td><b>Bounce rate</b></td><td>Visits that viewed only one page</td></tr>
+          <tr><td><b>Visit duration</b></td><td>Time from the first to the last action in a visit</td></tr>
+        </table></div>
+        <p>Source: Umami Software (n.d.f).</p>
+        <div class="checkpoint"><p>The Overview shows at least 1 visitor and 1 view. If it shows 0, wait a minute, refresh, and check the date range in the top right.</p></div>
+      </section>
+
+      <section class="step" id="s8">
+        <h2><span class="n">8</span>Track button clicks</h2>
+        <p>Page views do not tell us which stall people are interested in. In our demo, each button already has two extra attributes (Umami Software, n.d.g):</p>
+        <div class="code"><div class="file">index.html</div><pre>&lt;button data-umami-event="Book stall" data-umami-event-stall="mulled-wine"&gt;Book this stall&lt;/button&gt;
+&lt;button data-umami-event="Book stall" data-umami-event-stall="crafts"&gt;Book this stall&lt;/button&gt;</pre></div>
+        <div class="table-wrap"><table>
+          <tr><th>Attribute</th><th>Meaning</th></tr>
+          <tr><td><code>data-umami-event="Book stall"</code></td><td>The event name, recorded each time the button is clicked</td></tr>
+          <tr><td><code>data-umami-event-stall="..."</code></td><td>A property called <code>stall</code>, so we can tell the buttons apart</td></tr>
+        </table></div>
+        <p>On your own site, add the same attributes to any button or link you want to count. Click each button a few times, then open <b>Events</b> in the left menu of your website dashboard.</p>
+        <figure><img src="images/tutorial/08-events.png" alt="Umami Events page showing 15 events and a list of Book stall clicks" loading="lazy"><figcaption>Every click is recorded as an event. The <b>Properties</b> tab lists each click with its <code>stall</code> value.</figcaption></figure>
+        <p>To compare the stalls, choose <code>stall</code> in the <b>Property</b> box.</p>
+        <figure><img src="images/tutorial/08-property-select.png" alt="Property drop-down set to stall" loading="lazy"><figcaption>Choose the <code>stall</code> property.</figcaption></figure>
+        <figure><img src="images/tutorial/08-properties.png" alt="Table and donut chart: mulled-wine 8 clicks, crafts 7 clicks" loading="lazy"><figcaption>Total clicks per stall in our test.</figcaption></figure>
+        <div class="checkpoint"><p>The Events page lists <b>Book stall</b>, and the <code>stall</code> property shows a count for each button you clicked.</p></div>
+        <div class="callout warn"><span class="label">Think about it</span>Clicking the same button five times records five events. A click shows interest; it is not a confirmed booking.</div>
+      </section>
+
+      <section class="step" id="s9">
+        <h2><span class="n">9</span>Track a campaign link (UTM)</h2>
+        <p>UTM tags are labels added to the end of a link. They tell Umami where a visitor came from, without changing the page. For example, the market could print this link on a poster:</p>
+        <div class="code"><pre>http://localhost:5500/index.html?utm_source=poster&amp;utm_campaign=xmas</pre></div>
+        <ul>
+          <li><code>utm_source</code>: where the visitor came from (poster, instagram, email).</li>
+          <li><code>utm_campaign</code>: which campaign (xmas).</li>
+        </ul>
+        <figure><img src="images/tutorial/09-utm-link.png" alt="Browser address bar with utm_source=poster and utm_campaign=xmas" loading="lazy"><figcaption>Open your page with the UTM tags added.</figcaption></figure>
+        <p>In Umami, scroll down the left menu and open <b>Growth &rarr; UTM</b>.</p>
+        <figure><img src="images/tutorial/09-utm-report.png" alt="Umami UTM report showing the xmas campaign" loading="lazy"><figcaption>Visits from the tagged link appear under the campaign name.</figcaption></figure>
+        <div class="checkpoint"><p>The UTM report shows the <b>xmas</b> campaign. Try another link with <code>utm_source=instagram</code> and compare.</p></div>
+      </section>
+
+      <h2 id="trouble">Troubleshooting</h2>
+      <div class="table-wrap"><table>
+        <tr><th>Problem</th><th>Fix</th></tr>
+        <tr><td><b>Invalid domain. Do not include http/https.</b></td><td>Type only the host name in <b>Domain</b>, for example <code>localhost</code>. Do not include <code>http://</code>, a port such as <code>:5500</code>, or a file path. Umami does not accept <code>127.0.0.1</code>.</td></tr>
+        <tr><td>Dashboard shows no data</td><td>Check the website ID matches your dashboard; open the page with Live Server (not <code>file://</code>); turn off ad blockers for this site; make sure the date range includes today.</td></tr>
+        <tr><td>Page views work but no events</td><td>Check the spelling of <code>data-umami-event</code>, save the file, and hard-refresh the page (<kbd>Ctrl</kbd>+<kbd>F5</kbd> or <kbd>Cmd</kbd>+<kbd>Shift</kbd>+<kbd>R</kbd>).</td></tr>
+        <tr><td>"Open with Live Server" is missing</td><td>Install the <b>Live Server</b> extension in VS Code, then restart VS Code.</td></tr>
+      </table></div>
+      <figure><img src="images/tutorial/03-invalid-domain.png" alt="Add website form showing the Invalid domain error" loading="lazy"><figcaption>The most common mistake: pasting the full address into <b>Domain</b>.</figcaption></figure>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>COMP10020 Internet Technologies &middot; CW1 &middot; Group H &middot; University of the West of Scotland, 2026&ndash;27</span>
+  <span>Xinyu Ye &middot; Haoyue Zhou &middot; Chengwei Gao &middot; Junliang Li</span>
+</div></footer>
+</body>
+</html>

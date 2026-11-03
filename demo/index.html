@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A simple Paisley Christmas Market website for a student presentation.">
+  <title>Paisley Christmas Market</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="umami-config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header>
+    <h1>Paisley Christmas Market</h1>
+    <p>Festive drinks and handmade gifts</p>
+  </header>
+
+  <nav aria-label="Main navigation">
+    <a href="#welcome">Home</a>
+    <a href="#stalls">Our Stalls</a>
+    <a href="#about">About</a>
+  </nav>
+
+  <main>
+    <section id="welcome">
+      <h2>Welcome to our Christmas market</h2>
+      <p>Explore our example stalls below. Choose a stall to try the booking button.</p>
+    </section>
+
+    <section id="stalls">
+      <h2>Our Stalls</h2>
+      <div class="stall-list">
+        <article class="stall">
+          <img src="assets/mulled-wine.jpg" alt="Mulled wine with cinnamon and Christmas biscuits" width="900" height="600">
+          <h3>Mulled Wine</h3>
+          <p>A warm winter drink with orange, cinnamon and festive spices.</p>
+          <!-- Umami event: Book stall. Property: stall = mulled-wine. -->
+          <button type="button"
+            data-umami-event="Book stall"
+            data-umami-event-stall="mulled-wine"
+            data-stall-name="Mulled Wine">Book this stall</button>
+        </article>
+
+        <article class="stall">
+          <img src="assets/crafts.jpg" alt="Christmas ornaments displayed at a craft stall" width="900" height="600">
+          <h3>Handmade Crafts</h3>
+          <p>Browse Christmas decorations and small handmade gifts.</p>
+          <!-- Same event name, a different stall property. -->
+          <button type="button"
+            data-umami-event="Book stall"
+            data-umami-event-stall="crafts"
+            data-stall-name="Handmade Crafts">Book this stall</button>
+        </article>
+      </div>
+      <p id="booking-message" class="message" role="status" aria-live="polite" hidden></p>
+    </section>
+
+    <section id="about">
+      <h2>About this website</h2>
+      <p>This is a student demonstration website for our Umami presentation.</p>
+      <p>The buttons demonstrate a selection. They do not create real bookings or take payments.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>Paisley Christmas Market · Student project</p>
+    <p>Not an official event website. Images are illustrative.</p>
+  </footer>
+</body>
+</html>

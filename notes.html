@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Notes | Umami – Group H</title>
+<meta name="description" content="Reference notes on Umami: features, architecture, privacy model, hosting and comparisons.">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="index.html"><span class="dot"></span>Umami <small>&middot; Group H</small></a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="notes.html">Notes</a>
+    <a href="cheatsheet.html">Cheat sheet</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="references.html">References</a>
+  </nav>
+</div></header>
+<main class="wrap">
+  <p class="eyebrow">Reference notes</p>
+  <h1 class="page-title">Umami: notes for developers</h1>
+  <p class="lead">What Umami is, how it counts visitors without cookies, and when it is (and is not) the right tool. Version details refer to Umami 3.4. For hands-on steps, see the separate <a href="tutorial.html">tutorial</a>.</p>
+
+  <div class="with-toc">
+    <nav class="toc" aria-label="On this page">
+      <strong>On this page</strong>
+      <a href="#overview">1. Overview</a>
+      <a href="#features">2. Features</a>
+      <a href="#architecture">3. How it works</a>
+      <a href="#privacy">4. Counting without cookies</a>
+      <a href="#metrics">5. What the numbers mean</a>
+      <a href="#law">6. Privacy law and limits</a>
+      <a href="#hosting">7. Hosting options</a>
+      <a href="#compare">8. Comparison</a>
+      <a href="#usecase">9. Use case</a>
+      <a href="#proscons">10. Pros and cons</a>
+      <a href="#learned">11. What we learned</a>
+    </nav>
+
+    <div>
+      <h2 id="overview">1. Overview</h2>
+      <p>Umami is an open-source web and product analytics platform released under the MIT licence (Umami Software, n.d.i). A website owner adds one small JavaScript file to their pages; the file reports page views and chosen interactions to an Umami server, which shows them on a dashboard.</p>
+      <p>Its defining feature is privacy. Umami's tracker works "without cookies, cross-site tracking, or the automatic collection of personal data" (Umami Software, n.d.e). Instead of storing an identifier in the visitor's browser, the server recognises returning visitors with a hash that changes every month (see <a href="#privacy">section 4</a>).</p>
+      <div class="callout key">
+        <span class="label">Why it matters</span>
+        Cookie-based analytics usually needs a consent banner, and banner design strongly affects the data collected. Utz et al. (2019) found consent notices on over 60% of popular European websites in their study, and Nouwens et al. (2020) showed that removing the "reject" option from the first page raised consent by 22&ndash;23 percentage points. Analytics that depends on consent therefore depends on how the banner is designed.
+      </div>
+
+      <h2 id="features">2. Features</h2>
+      <p>Umami 3 groups its features into four areas (Umami Software, n.d.e):</p>
+      <div class="table-wrap"><table>
+        <tr><th>Area</th><th>Features</th><th>Example question it answers</th></tr>
+        <tr><td><b>Acquisition</b></td><td>Page views, visitors, referrers, locations, devices, real-time view, UTM campaigns, short links, tracking pixels</td><td>Did more people arrive from Instagram or from Google?</td></tr>
+        <tr><td><b>Behaviour</b></td><td>Custom events with properties, journeys, segments, cohorts, retention, session replays, heatmaps</td><td>Which "Book stall" button is clicked most?</td></tr>
+        <tr><td><b>Conversion</b></td><td>Goals, funnels, attribution, revenue reports</td><td>Where do people drop out between viewing a stall and booking it?</td></tr>
+        <tr><td><b>Sharing &amp; extension</b></td><td>Boards, teams, share URLs, REST API, official MCP server for AI assistants</td><td>Can the market committee view the reports without an admin login?</td></tr>
+      </table></div>
+      <p>Version 3.0 introduced a redesigned interface, URL-based filters, segments, cohorts, links and pixels, and dropped MySQL support in favour of PostgreSQL only (Umami Software, 2025).</p>
+
+      <h2 id="architecture">3. How it works</h2>
+      <p>Umami is a full-stack Next.js application. The same server delivers the tracker script, receives events through an API route and renders the dashboard. Data is stored in PostgreSQL through the Prisma ORM.</p>
+      <div class="diagram" role="img" aria-label="Data flow: browser loads script.js, which sends a POST to /api/send on the Umami Next.js server; the server filters bots and blocked IPs, writes to PostgreSQL, and the owner reads the dashboard.">
+        <svg viewBox="0 0 900 230" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+          <rect class="box" x="10" y="40" width="150" height="80" rx="10"/>
+          <text x="85" y="75" text-anchor="middle" font-weight="700" font-size="15">Browser</text>
+          <text x="85" y="97" text-anchor="middle" font-size="12" class="muted">visitor opens a page</text>
+          <rect class="box" x="190" y="40" width="150" height="80" rx="10"/>
+          <text x="265" y="75" text-anchor="middle" font-weight="700" font-size="15">script.js</text>
+          <text x="265" y="97" text-anchor="middle" font-size="12" class="muted">tracker in &lt;head&gt;</text>
+          <rect class="box accent" x="370" y="40" width="170" height="80" rx="10"/>
+          <text x="455" y="75" text-anchor="middle" font-weight="700" font-size="15">Umami server</text>
+          <text x="455" y="97" text-anchor="middle" font-size="12" class="muted">Next.js + Prisma</text>
+          <rect class="box" x="570" y="40" width="150" height="80" rx="10"/>
+          <text x="645" y="75" text-anchor="middle" font-weight="700" font-size="15">PostgreSQL</text>
+          <text x="645" y="97" text-anchor="middle" font-size="12" class="muted">stores events</text>
+          <rect class="box" x="750" y="40" width="140" height="80" rx="10"/>
+          <text x="820" y="75" text-anchor="middle" font-weight="700" font-size="15">Dashboard</text>
+          <text x="820" y="97" text-anchor="middle" font-size="12" class="muted">owner reads stats</text>
+          <path class="arrow" d="M160 80H186" marker-end="url(#ah)"/>
+          <path class="arrow" d="M340 80H366" marker-end="url(#ah)"/>
+          <path class="arrow" d="M540 80H566" marker-end="url(#ah)"/>
+          <path class="arrow" d="M720 80H746" marker-end="url(#ah)"/>
+          <text x="355" y="30" text-anchor="middle" font-size="12" font-family="monospace" class="muted">POST /api/send</text>
+          <path class="arrow" d="M455 120V150"/>
+          <rect class="box" x="300" y="150" width="310" height="62" rx="10"/>
+          <text x="455" y="175" text-anchor="middle" font-size="13" font-weight="700">Before saving: two filters</text>
+          <text x="455" y="197" text-anchor="middle" font-size="12" class="muted">bots (isbot library) &#183; blocked IPs (IGNORE_IP)</text>
+        </svg>
+      </div>
+      <ol>
+        <li>The visitor's browser loads the page, including <code>&lt;script defer src=".../script.js" data-website-id="..."&gt;</code>.</li>
+        <li>The tracker sends a small JSON payload to <code>/api/send</code>: page URL and title, referrer, screen size, language and the website ID. In single-page apps it also reports route changes automatically by hooking <code>history.pushState</code> (Umami Software, n.d.i).</li>
+        <li>The server drops requests whose user agent matches the <em>isbot</em> library and rejects IP addresses listed in the <code>IGNORE_IP</code> setting (Umami Software, n.d.i).</li>
+        <li>It derives browser, operating system, device and approximate location from the request, computes the session and visit IDs (section 4), and stores the event.</li>
+        <li>The dashboard reads the same database.</li>
+      </ol>
+
+      <h2 id="privacy">4. Counting visitors without cookies</h2>
+      <p>A cookie lets a site recognise a browser because the browser sends the same stored value back. Umami recognises a visitor by <strong>recomputing</strong> an identifier on the server from the request itself.</p>
+      <div class="code"><div class="file">src/app/api/send/route.ts (simplified)</div><pre><span class="c-key">sessionId</span> = uuid( websiteId, ip, userAgent, <span class="c-str">monthlySalt</span> )
+<span class="c-key">visitId</span>   = uuid( sessionId, <span class="c-str">hourlySalt</span> )</pre></div>
+      <p>The function combines its inputs with a one-way hash, so the same inputs always give the same ID but the ID cannot be reversed into an IP address. The <strong>salt</strong> is an extra value that changes on a schedule: monthly by default for sessions (configurable with <code>SALT_ROTATION</code>) and hourly for visits.</p>
+      <div class="diagram" role="img" aria-label="Same site, IP, browser and October salt give the same ID in the morning and afternoon; in November the salt changes so the ID changes.">
+        <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+          <defs><marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="arrowhead"/></marker></defs>
+          <text x="10" y="40" font-size="13" font-weight="700" class="muted">Oct, morning</text>
+          <rect class="box" x="130" y="18" width="340" height="36" rx="8"/><text x="300" y="41" text-anchor="middle" font-size="13">site + IP + browser + October salt</text>
+          <path class="arrow" d="M475 36H535" marker-end="url(#ah2)"/><text x="505" y="28" text-anchor="middle" font-size="11" class="muted">hash</text>
+          <rect class="box accent" x="540" y="18" width="120" height="36" rx="8"/><text x="600" y="41" text-anchor="middle" font-size="13" font-family="monospace">a3f9c2&#8230;</text>
+          <text x="10" y="100" font-size="13" font-weight="700" class="muted">Oct, afternoon</text>
+          <rect class="box" x="130" y="78" width="340" height="36" rx="8"/><text x="300" y="101" text-anchor="middle" font-size="13">site + IP + browser + October salt</text>
+          <path class="arrow" d="M475 96H535" marker-end="url(#ah2)"/>
+          <rect class="box accent" x="540" y="78" width="120" height="36" rx="8"/><text x="600" y="101" text-anchor="middle" font-size="13" font-family="monospace">a3f9c2&#8230;</text>
+          <text x="680" y="60" font-size="13" font-weight="700" class="good">same code = 1 visitor</text>
+          <text x="680" y="78" font-size="12" class="muted">nothing stored on the device</text>
+          <text x="10" y="160" font-size="13" font-weight="700" class="muted">November</text>
+          <rect class="box" x="130" y="138" width="340" height="36" rx="8"/><text x="300" y="161" text-anchor="middle" font-size="13">site + IP + browser + November salt</text>
+          <path class="arrow" d="M475 156H535" marker-end="url(#ah2)"/>
+          <rect class="box" x="540" y="138" width="120" height="36" rx="8"/><text x="600" y="161" text-anchor="middle" font-size="13" font-family="monospace">7d10e8&#8230;</text>
+          <text x="680" y="152" font-size="13" font-weight="700" class="bad">new salt = new code</text>
+          <text x="680" y="170" font-size="12" class="muted">no link to October</text>
+        </svg>
+      </div>
+      <p>Two consequences follow. First, the IP address is used to compute the hash but is not stored in the session record (Umami Software, n.d.f). Second, after the salt changes, the same person produces a different ID, so activity cannot be linked across rotation periods. A site can deliberately override this with <code>umami.identify()</code>, which assigns its own distinct ID and links sessions; once used, analytics is no longer anonymous by design (Umami Software, n.d.f).</p>
+
+      <h2 id="metrics">5. What the numbers mean</h2>
+      <p>Because identity comes from a hash rather than a login or cookie, Umami's metrics have precise definitions (Umami Software, n.d.f):</p>
+      <div class="table-wrap"><table>
+        <tr><th>Metric</th><th>Definition</th><th>Watch out for</th></tr>
+        <tr><td><b>Visitors</b></td><td>Unique sessions (unique session IDs)</td><td>An estimate of people, not a count of identified individuals</td></tr>
+        <tr><td><b>Visits</b></td><td>Unique visit IDs; a new visit starts after 30 minutes of inactivity</td><td>One visitor can make several visits in a day</td></tr>
+        <tr><td><b>Views</b></td><td>Page views recorded</td><td>Refreshing a page adds a view</td></tr>
+        <tr><td><b>Bounce rate</b></td><td>Visits with only one event, divided by visits</td><td>A one-page site will show a high bounce rate</td></tr>
+        <tr><td><b>Visit duration</b></td><td>Time between first and last event, for visits with more than one page</td><td>Single-page visits contribute no time</td></tr>
+        <tr><td><b>Events</b></td><td>Custom actions you send, such as a button click</td><td>A click is an action, not a completed purchase</td></tr>
+      </table></div>
+      <div class="callout warn">
+        <span class="label">Counting errors in both directions</span>
+        The same person on Wi-Fi and then 4G has two IP addresses and appears as two visitors. Two people on the same Wi-Fi with the same browser version can share one ID and appear as one. VPN users are hashed with the VPN server's IP, and their location shows the VPN server's country.
+      </div>
+
+      <h2 id="law">6. Privacy law and limits</h2>
+      <p><strong>Pseudonymous, not anonymous.</strong> The European Data Protection Board treats pseudonymised data &mdash; data that can no longer identify someone without additional information, such as a hashed identifier &mdash; as personal data that remains subject to GDPR (EDPB, 2025). Umami's own FAQ says GDPR compliance "depends on how you configure and use it" (Umami Software, n.d.c).</p>
+      <p><strong>UK consent rules have changed.</strong> Under the Data (Use and Access) Act 2025, the ICO's 2026 guidance allows storage and access technologies used solely for statistical analytics without consent, provided that users receive clear information and a simple, free way to object, results are aggregate, and nothing is used for profiling or advertising (ICO, 2026). For UK sites, Umami's advantage is therefore less about avoiding a banner and more about collecting less data in the first place.</p>
+      <p><strong>Retention is your job when self-hosting.</strong> A self-hosted instance keeps data until you delete it (Umami Software, n.d.c), so the owner must set a retention policy.</p>
+      <p><strong>Ad blockers.</strong> Some blockers block the default <code>script.js</code> and <code>/api/send</code>. Umami can rename both with the <code>TRACKER_SCRIPT_NAME</code> and <code>COLLECT_API_ENDPOINT</code> environment variables (Umami Software, n.d.b). Whether a site should work around a visitor's blocking choice is an ethical question as well as a technical one; the tracker also supports <code>data-do-not-track="true"</code> to respect the browser's Do Not Track setting.</p>
+
+      <h2 id="hosting">7. Hosting options</h2>
+      <div class="table-wrap"><table>
+        <tr><th></th><th>Umami Cloud</th><th>Self-hosted</th></tr>
+        <tr><td><b>Who runs it</b></td><td>Umami: hosting, updates, backups, scaling</td><td>You</td></tr>
+        <tr><td><b>Setup</b></td><td>Sign up, add a website, paste the tracking code</td><td>Docker Compose (Umami + PostgreSQL) or Node.js 18.18+ with PostgreSQL 12.14+</td></tr>
+        <tr><td><b>Where data lives</b></td><td>Umami's infrastructure</td><td>Your server</td></tr>
+        <tr><td><b>Feature access</b></td><td>Core analytics on all plans; replays and heatmaps on higher plans; email reports only on Cloud</td><td>Core analytics plus teams, API, replays (3.1+) and heatmaps (3.2+)</td></tr>
+        <tr><td><b>Cost</b></td><td>Plan-based; check current pricing</td><td>Software free; you pay for the server</td></tr>
+      </table></div>
+      <p>Sources: Umami Software (n.d.d; n.d.h). Our live demo and our <a href="tutorial.html">tutorial</a> both use Umami Cloud because it is quick to set up and needs no server.</p>
+
+      <h2 id="compare">8. Comparison with other analytics tools</h2>
+      <div class="table-wrap"><table>
+        <tr><th></th><th class="hl">Umami</th><th>Google Analytics 4</th><th>Matomo</th><th>Plausible</th></tr>
+        <tr><td><b>Open source</b></td><td class="hl">Yes (MIT)</td><td>No</td><td>Yes</td><td>Yes (AGPLv3)</td></tr>
+        <tr><td><b>Self-hosting</b></td><td class="hl">Yes</td><td>No</td><td>Yes</td><td>Yes (Community Edition)</td></tr>
+        <tr><td><b>Cookies by default</b></td><td class="hl">None</td><td>First-party cookies</td><td>First-party cookies; can be disabled</td><td>None</td></tr>
+        <tr><td><b>Depth</b></td><td class="hl">Focused: traffic, events, funnels</td><td>Very deep, advertising integration</td><td>Deep, GA-like</td><td>Focused</td></tr>
+        <tr><td><b>Best for</b></td><td class="hl">Small to medium sites wanting simple, low-data analytics they control</td><td>Marketing teams using Google Ads</td><td>Organisations wanting GA-style depth on their own servers</td><td>Similar to Umami; cloud hosted in the EU</td></tr>
+      </table></div>
+      <p>Sources: Google (n.d.); Matomo (n.d.); Plausible Analytics (n.d.); Umami Software (n.d.i).</p>
+
+      <h2 id="usecase">9. Use case: Paisley Christmas Market</h2>
+      <p>Our CW2 scenario is a web app for a new Christmas market in Paisley. Umami could answer the organiser's practical questions without tracking individual shoppers:</p>
+      <div class="table-wrap"><table>
+        <tr><th>Organiser's question</th><th>Umami feature</th></tr>
+        <tr><td>Which stalls attract the most interest?</td><td>Top pages, plus a "Book stall" event with a <code>stall</code> property</td></tr>
+        <tr><td>Where do visitors come from?</td><td>Referrers and UTM-tagged links on posters or social posts</td></tr>
+        <tr><td>Are visitors mostly on phones?</td><td>Device breakdown, to justify a mobile-first design</td></tr>
+        <tr><td>Where do bookings drop off?</td><td>Funnel: stall page &rarr; booking form &rarr; booking confirmed (requires tracking the confirmation step)</td></tr>
+        <tr><td>Can stallholders see results?</td><td>A share URL for a read-only dashboard</td></tr>
+      </table></div>
+
+      <h2 id="proscons">10. Pros and cons</h2>
+      <div class="grid">
+        <div class="callout good"><span class="label">Pros</span><ul>
+          <li>No cookies and no stored IP addresses</li>
+          <li>One script tag; works with plain HTML, React or Next.js</li>
+          <li>Open source: you can read how the numbers are calculated</li>
+          <li>Self-hosting keeps data under your control</li>
+          <li>Simple dashboard non-technical staff can read</li>
+        </ul></div>
+        <div class="callout warn"><span class="label">Cons</span><ul>
+          <li>Visitor counts are estimates</li>
+          <li>No long-term tracking of individual users (by design)</li>
+          <li>Hashed IDs are still personal data under GDPR</li>
+          <li>Self-hosting means updates, backups and retention are your job</li>
+          <li>Smaller ecosystem than Google Analytics; PostgreSQL only from v3</li>
+        </ul></div>
+      </div>
+
+      <h2 id="learned">11. What we learned</h2>
+      <ul>
+        <li><strong>Read the definitions, not just the dashboard.</strong> Our test showed "3 events", which turned out to be three clicks from repeated testing, not three people or three bookings.</li>
+        <li><strong>Privacy is a spectrum.</strong> Removing cookies is a real improvement, but a hash of an IP address is still pseudonymous personal data. "Cookieless" does not automatically mean "anonymous".</li>
+        <li><strong>The law moved under us.</strong> We started by framing Umami as a way to avoid consent banners; the ICO's 2026 guidance changed that argument for UK sites, so we reframed it around data minimisation.</li>
+        <li><strong>Open source made checking possible.</strong> We could confirm the hashing formula and the bot filter directly in the source code instead of relying on marketing claims.</li>
+      </ul>
+    </div>
+  </div>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>COMP10020 Internet Technologies &middot; CW1 &middot; Group H &middot; University of the West of Scotland, 2026&ndash;27</span>
+  <span>Xinyu Ye &middot; Haoyue Zhou &middot; Chengwei Gao &middot; Junliang Li</span>
+</div></footer>
+</body>
+</html>

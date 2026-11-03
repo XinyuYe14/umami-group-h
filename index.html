@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Umami: Counting Visitors Without Cookies</title>
+<meta name="description" content="Group H's CW1 site on Umami, an open-source, privacy-focused web analytics tool.">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="index.html"><span class="dot"></span>Umami <small>&middot; Group H</small></a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="notes.html">Notes</a>
+    <a href="cheatsheet.html">Cheat sheet</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="references.html">References</a>
+  </nav>
+</div></header>
+<section class="hero"><div class="inner">
+  <p class="eyebrow">COMP10020 &middot; Internet Technologies &middot; CW1</p>
+  <h1>Umami: Counting Visitors Without Cookies</h1>
+  <p>An open-source, privacy-focused web analytics platform. This site collects our slides, reference notes, a one-page cheat sheet and a hands-on tutorial you can finish in about an hour.</p>
+  <div class="team">
+    <div><b>Xinyu Ye</b><span>B01857217</span></div>
+    <div><b>Haoyue Zhou</b><span>B01857699</span></div>
+    <div><b>Junliang Li</b><span>B01857638</span></div>
+    <div><b>Chengwei Gao</b><span>B01857619</span></div>
+  </div>
+</div></section>
+
+<main class="wrap">
+  <p class="question">Can we get useful analytics without relying on cookies?</p>
+  <p class="lead">Our short answer: <strong>yes, if we accept estimated visitor counts rather than identified individuals.</strong> Umami identifies visitors with a hash that changes every month instead of a cookie, so it can count and compare traffic without following people over time.</p>
+
+  <div class="grid cards-row">
+    <a class="card" href="presentation.html"><span class="tag">Presentation</span><h3>Slides &amp; Q&amp;A</h3><p>All 21 slides with a short summary of each, plus the questions we were asked.</p></a>
+    <a class="card" href="notes.html"><span class="tag">Notes</span><h3>Reference notes</h3><p>Features, architecture, the cookieless privacy model, hosting options and how Umami compares.</p></a>
+    <a class="card" href="cheatsheet.html"><span class="tag">Cheat sheet</span><h3>One-page summary</h3><p>Commands, tracker attributes, the events API and metric definitions. Printable.</p></a>
+    <a class="card" href="demo/index.html"><span class="tag">Demo</span><h3>Our demo website</h3><p>The Paisley Christmas Market page we used in the live demonstration. Analytics is switched off in this public copy.</p></a>
+    <a class="card" href="tutorial.html"><span class="tag">Tutorial &middot; ~30 min</span><h3>Track your website with Umami Cloud</h3><p>Add a website, connect it and read page views, button clicks and campaign links in your dashboard.</p></a>
+  </div>
+
+  <h2>Umami at a glance</h2>
+  <div class="table-wrap"><table>
+    <tr><th>What it is</th><td>Open-source web and product analytics platform (MIT licence)</td></tr>
+    <tr><th>Built with</th><td>Next.js application, Prisma, PostgreSQL database (version 3 supports PostgreSQL only)</td></tr>
+    <tr><th>How you add it</th><td>One <code>&lt;script&gt;</code> tag in your page's <code>&lt;head&gt;</code></td></tr>
+    <tr><th>Cookies</th><td>None. Visitors are identified by a hash of website ID, IP address, user agent and a monthly salt</td></tr>
+    <tr><th>Hosting</th><td>Umami Cloud (managed) or self-hosted, for example with Docker Compose</td></tr>
+    <tr><th>Good for</th><td>Traffic trends, referrers, devices, custom events and funnels, with minimal personal data</td></tr>
+  </table></div>
+
+  <div class="callout key">
+    <span class="label">How this site is organised</span>
+    The <a href="notes.html">Notes</a> explain <em>what Umami is and how it works</em>. The <a href="tutorial.html">Tutorial</a> is a separate, step-by-step lab you <em>do</em>. The <a href="cheatsheet.html">Cheat sheet</a> is for quick reference while you work. Sources for everything are on the <a href="references.html">References</a> page.
+  </div>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>COMP10020 Internet Technologies &middot; CW1 &middot; Group H &middot; University of the West of Scotland, 2026&ndash;27</span>
+  <span>Xinyu Ye &middot; Haoyue Zhou &middot; Chengwei Gao &middot; Junliang Li</span>
+</div></footer>
+</body>
+</html>

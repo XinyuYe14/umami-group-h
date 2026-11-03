@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Presentation | Umami – Group H</title>
+<meta name="description" content="Slides and Q&A from Group H's Umami presentation.">
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/main.js" defer></script>
+</head>
+<body>
+<header class="site-header"><div class="inner">
+  <a class="brand" href="index.html"><span class="dot"></span>Umami <small>&middot; Group H</small></a>
+  <nav class="nav" aria-label="Main">
+    <a href="index.html">Home</a>
+    <a href="presentation.html">Presentation</a>
+    <a href="notes.html">Notes</a>
+    <a href="cheatsheet.html">Cheat sheet</a>
+    <a href="tutorial.html">Tutorial</a>
+    <a href="references.html">References</a>
+  </nav>
+</div></header>
+<main class="wrap">
+  <p class="eyebrow">Presentation</p>
+  <h1 class="page-title">Slides and Q&amp;A</h1>
+  <p class="lead"><a href="slides/Umami_CW1_GroupH.pdf">Download the slides as PDF</a>.</p>
+
+  <div class="slides">
+    <div class="slide"><img src="slides/slide-01.jpg" alt="Title slide: Umami, Counting Visitors Without Cookies" loading="lazy"><div><span class="who">Title</span><h3>Umami: Counting Visitors Without Cookies</h3><p>Open-source, privacy-focused web analytics, presented by Group H.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-02.jpg" alt="Slide 2: The analytics dilemma" loading="lazy"><div><span class="who">Junliang Li</span><h3>The analytics dilemma</h3><p>Sites need traffic data, but cookie-based tracking comes with consent notices. Utz et al. (2019) found notices on over 60% of popular EU sites, and Nouwens et al. (2020) showed that hiding the first-page reject option raised consent by 22&ndash;23 percentage points. This sets our question: can we get useful analytics without relying on cookies?</p></div></div>
+
+    <div class="slide"><img src="slides/slide-03.jpg" alt="Slide 3: What is Umami?" loading="lazy"><div><span class="who">Junliang Li</span><h3>What is Umami?</h3><p>An open-source platform for web and product analytics with a cookie-free tracker, available as managed Umami Cloud or as a self-hosted instance.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-04.jpg" alt="Slide 4: What Umami measures" loading="lazy"><div><span class="who">Junliang Li</span><h3>What Umami measures</h3><p>A traffic overview, visitor context (referrers, devices, browsers, approximate location) and custom events with properties for specific actions.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-05.jpg" alt="Slide 5: UTM tracking and sharing" loading="lazy"><div><span class="who">Junliang Li</span><h3>UTM tracking and sharing</h3><p>UTM reports compare traffic from tagged links (for example email versus social posts). Share URLs publish selected reports without giving out an admin account.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-06.jpg" alt="Slide 6: How the parts connect" loading="lazy"><div><span class="who">Xinyu Ye</span><h3>How the parts connect</h3><p>Browser &rarr; script.js sends a request to /api/send &rarr; the Next.js server filters bots and blocked IPs &rarr; PostgreSQL stores the event &rarr; the owner reads the dashboard. No cookie appears at any step.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-07.jpg" alt="Slide 7: What Umami sees, and what it doesn't" loading="lazy"><div><span class="who">Xinyu Ye</span><h3>What Umami sees, and what it doesn't</h3><p>The script sends page URL, title, referrer, screen size and language. The server adds browser, operating system, device and an approximate location. The IP address itself, cookies, and names or emails are not stored.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-08.jpg" alt="Slide 8: Hashing, a fingerprint not a cookie" loading="lazy"><div><span class="who">Xinyu Ye</span><h3>Hashing: a fingerprint, not a cookie</h3><p>The same inputs always give the same hash, so a morning and afternoon visit in October count as one visitor. In November the salt changes, the code changes, and the two months cannot be linked.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-09.jpg" alt="Slide 9: The exact formulas" loading="lazy"><div><span class="who">Xinyu Ye</span><h3>The exact formulas</h3><p>Session ID = hash(website ID + IP + user agent + monthly salt). Visit ID = hash(session ID + hourly salt). We checked both in Umami's source code.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-10.jpg" alt="Slide 10: What this design costs" loading="lazy"><div><span class="who">Xinyu Ye</span><h3>What this design costs</h3><p>No identity is stored, but counts are approximate: changing network creates a "new" visitor, people sharing Wi-Fi and a browser may merge, and a hashed ID is still personal data under GDPR (EDPB, 2025). Precision versus privacy is a choice.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-11.jpg" alt="Slide 11: Our demo website" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Our demo website</h3><p>A single-page Paisley Christmas Market site with two stalls. Our question: which stall button receives more clicks? <a href="demo/index.html">Open our demo website</a> (analytics is switched off in this public copy).</p></div></div>
+
+    <div class="slide"><img src="slides/slide-12.jpg" alt="Slide 12: Connecting to Umami Cloud" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Connecting to Umami Cloud</h3><p>A small configuration file holds the tracker URL and website ID that link the page to its Umami dashboard.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-13.jpg" alt="Slide 13: Checking the first page visit" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Checking the first page visit</h3><p>Our first test visit appeared in the Overview dashboard, confirming the tracker was sending data.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-14.jpg" alt="Slide 14: Tracking a button click" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Tracking a button click</h3><p>Two HTML attributes record a "Book stall" event with a stall property. A click records an action, not a confirmed booking.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-15.jpg" alt="Slide 15: Checking the recorded clicks" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Checking the recorded clicks</h3><p>A live click on the website, followed by a refresh of the Events view, showed the count increasing.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-16.jpg" alt="Slide 16: Reading event properties" loading="lazy"><div><span class="who">Chengwei Gao</span><h3>Reading event properties</h3><p>Two mulled-wine clicks and one crafts click in our test. This confirms tracking works; it does not measure customer demand.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-17.jpg" alt="Slide 17: Paisley Christmas Market use case" loading="lazy"><div><span class="who">Haoyue Zhou</span><h3>Use case: Paisley Christmas Market</h3><p>How an organiser could use Umami: most popular stalls, traffic sources, phone versus desktop, and a booking funnel (which would need the confirmation step tracked too).</p></div></div>
+
+    <div class="slide"><img src="slides/slide-18.jpg" alt="Slide 18: How it compares" loading="lazy"><div><span class="who">Haoyue Zhou</span><h3>How it compares</h3><p>Umami, Google Analytics and Matomo compared on open source, self-hosting, default cookies, price, feature depth and maintenance.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-19.jpg" alt="Slide 19: When (not) to use Umami" loading="lazy"><div><span class="who">Haoyue Zhou</span><h3>When (not) to use Umami</h3><p>Use it for basic traffic and event reports without cookies, with control over where data is stored. Avoid it for deep advertising integration or person-level tracking across months.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-20.jpg" alt="Slide 20: References" loading="lazy"><div><span class="who">Sources</span><h3>References</h3><p>The full, updated list is on our <a href="references.html">References</a> page.</p></div></div>
+
+    <div class="slide"><img src="slides/slide-21.jpg" alt="Slide 21: Thank you" loading="lazy"><div><span class="who">End</span><h3>Thank you</h3><p>Questions followed.</p></div></div>
+  </div>
+
+  <h2 id="qa">Questions from the session</h2>
+  <h3>How does Umami track users who use a VPN?</h3>
+  <p>Umami only sees the VPN server's IP address, not the user's real one. Because the session hash uses the IP, a user who stays on the same VPN server is still counted as one visitor; switching servers, or turning the VPN on and off, changes the IP and creates a new visitor. The location shown in the dashboard is the VPN server's country. Several VPN users sharing an exit IP with the same browser could also be merged into one visitor &mdash; the same precision trade-off described on slide 10.</p>
+
+  <h2 id="prepared">Further questions we prepared for</h2>
+  <h3>Do UK sites still need a consent banner for analytics?</h3>
+  <p>Umami sets no cookies. In addition, the ICO's 2026 guidance on the Data (Use and Access) Act 2025 allows storage and access purely for statistical analytics without consent, provided users are told and can object free of charge, and the results are aggregate with no profiling or advertising (ICO, 2026). In the UK, Umami's main advantage is therefore collecting less data rather than avoiding a banner.</p>
+  <h3>Would you self-host it?</h3>
+  <p>Our live demo used Umami Cloud for speed. Self-hosting with Docker Compose keeps the data on your own server, at the cost of handling updates, backups and data retention yourself. Our <a href="tutorial.html">tutorial</a> uses Umami Cloud.</p>
+  <h3>How would you track real bookings rather than clicks?</h3>
+  <p>Send a second event from the booking confirmation step, then build a funnel from viewing a stall, to clicking "Book", to a confirmed booking, to see where people drop off.</p>
+</main>
+
+<footer class="site-footer"><div class="inner">
+  <span>COMP10020 Internet Technologies &middot; CW1 &middot; Group H &middot; University of the West of Scotland, 2026&ndash;27</span>
+  <span>Xinyu Ye &middot; Haoyue Zhou &middot; Chengwei Gao &middot; Junliang Li</span>
+</div></footer>
+</body>
+</html>
